@@ -52,11 +52,12 @@ class Game extends React.Component {
     this.state = {
       history: [
         {
-          squares: Array(9).fill(null)
+          squares: Array(9).fill(null),
+          move: Array(2).fill(null),
         }
       ],
       stepNumber: 0,
-      xIsNext: true
+      currentCharacter: nextCharacter(null),
     };
   }
 
@@ -67,22 +68,25 @@ class Game extends React.Component {
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
-    squares[i] = this.state.xIsNext ? 'X' : 'O';
+    squares[i] = this.state.currentCharacter;
     this.setState({
       history: history.concat([
         {
-          squares: squares
+          squares: squares,
+          move: coordFromIndex(i),
+          character: this.state.currentCharacter,
         }
       ]),
       stepNumber: history.length,
-      xIsNext: !this.state.xIsNext
+      currentCharacter: nextCharacter(this.state.currentCharacter),
     });
   }
 
   jumpTo(step) {
+    const stepCharacter = this.state.history[step].character
     this.setState({
       stepNumber: step,
-      xIsNext: (step % 2) === 0
+      currentCharacter: nextCharacter(stepCharacter),
     });
   }
 
@@ -93,7 +97,7 @@ class Game extends React.Component {
 
     const moves = history.map((step, move) => {
       const desc = move ?
-            'Go to move #' + move :
+            'Go to move #' + move + " (" + step.character + " at " + step.move + ")":
             'Go to game start';
       return (
         <li key={move}>
@@ -106,7 +110,7 @@ class Game extends React.Component {
     if (winner) {
       status = 'Winner: ' + winner;
     } else {
-      status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+      status = 'Next player: ' + (this.state.currentCharacter);
     }
 
     return (
@@ -124,6 +128,17 @@ class Game extends React.Component {
       </div>
     );
   }
+}
+
+
+function coordFromIndex(i) {
+  const col = i % 3;
+  const row = Math.floor(i/3)
+  return [row, col]
+}
+
+function nextCharacter(char) {
+  return (char === "X") ? "O" : "X"
 }
 
 function calculateWinner(squares) {
