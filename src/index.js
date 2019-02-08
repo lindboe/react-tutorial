@@ -71,9 +71,17 @@ class MoveList extends React.Component{
         const desc = move ?
               'Go to move #' + move + " (" + step.character + " at " + step.move + ")":
               'Go to game start';
-        return (
-          this.renderMoveButton(move, desc)
-        );
+        console.log(this.props.currentStep)
+        console.log(move)
+        if (this.props.currentStep === move) {
+          return (
+              <b>{this.renderMoveButton(move, desc)}</b>
+          );
+        } else {
+          return (
+            this.renderMoveButton(move, desc)
+          );
+        }
       })
     );
   }
@@ -148,7 +156,7 @@ class Game extends React.Component {
           <ol>
         <MoveList
           history={history}
-          current={current}
+          currentStep={this.state.stepNumber}
           onClick={(move) => this.handleMove(move)}
         />
         </ol>
