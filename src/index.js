@@ -68,20 +68,18 @@ class MoveList extends React.Component{
   render() {
     return (
       this.props.history.map((step, move) => {
-        const desc = move ?
+        const descWords = move ?
               'Go to move #' + move + " (" + step.character + " at " + step.move + ")":
               'Go to game start';
-        console.log(this.props.currentStep)
-        console.log(move)
+        var desc;
         if (this.props.currentStep === move) {
-          return (
-              <b>{this.renderMoveButton(move, desc)}</b>
-          );
+          desc = <b>{descWords}</b>;
         } else {
-          return (
-            this.renderMoveButton(move, desc)
-          );
+          desc = descWords;
         }
+        return (
+          this.renderMoveButton(move, desc)
+        );
       })
     );
   }
