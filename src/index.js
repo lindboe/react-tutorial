@@ -48,31 +48,24 @@ class Board extends React.Component {
 
 function MoveButton(props) {
   return (
-    props.history.map((step, move) => {
-      const desc = move ?
-            'Go to move #' + move + " (" + step.character + " at " + step.move + ")":
-            'Go to game start';
-      return (
-          <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>{desc}</button>
-          </li>
-      );
-    })
-  )
+    <li key={props.move}>
+      <button onClick={() => props.onClick(props.move)}>{props.desc}</button>
+    </li>
+  );
 }
 
 function MoveList(props) {
   return (
     props.history.map((step, move) => {
-      console.log("step " + step)
-      console.log("move " + move)
       const desc = move ?
             'Go to move #' + move + " (" + step.character + " at " + step.move + ")":
             'Go to game start';
       return (
-          <li key={move}>
-          <button onClick={() => props.onClick(move)}>{desc}</button>
-          </li>
+          <MoveButton
+            move={move}
+            desc={desc}
+            onClick={(moveData) => props.onClick(moveData)}
+            key={move} />
       );
     })
   )
@@ -114,11 +107,10 @@ class Game extends React.Component {
     });
   }
 
-  handleMove(step) {
-    console.log(step)
-    const stepCharacter = this.state.history[step].character
+  handleMove(move) {
+    const stepCharacter = this.state.history[move].character
     this.setState({
-      stepNumber: step,
+      stepNumber: move,
       currentCharacter: nextCharacter(stepCharacter),
     });
   }
