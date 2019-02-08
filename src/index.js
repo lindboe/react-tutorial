@@ -54,21 +54,29 @@ function MoveButton(props) {
   );
 }
 
-function MoveList(props) {
-  return (
-    props.history.map((step, move) => {
-      const desc = move ?
-            'Go to move #' + move + " (" + step.character + " at " + step.move + ")":
-            'Go to game start';
-      return (
-          <MoveButton
-            move={move}
-            desc={desc}
-            onClick={(moveData) => props.onClick(moveData)}
-            key={move} />
-      );
-    })
-  )
+class MoveList extends React.Component{
+  renderMoveButton(move, desc) {
+    return (
+      <MoveButton
+        move={move}
+        desc={desc}
+        onClick={(moveData) => this.props.onClick(moveData)}
+        key={move} />
+    );
+  }
+
+  render() {
+    return (
+      this.props.history.map((step, move) => {
+        const desc = move ?
+              'Go to move #' + move + " (" + step.character + " at " + step.move + ")":
+              'Go to game start';
+        return (
+          this.renderMoveButton(move, desc)
+        );
+      })
+    );
+  }
 }
 
 class Game extends React.Component {
@@ -139,8 +147,9 @@ class Game extends React.Component {
           <div>{status}</div>
           <ol>
         <MoveList
-      history={history}
-      onClick={(move) => this.handleMove(move)}
+          history={history}
+          current={current}
+          onClick={(move) => this.handleMove(move)}
         />
         </ol>
         </div>
