@@ -48,7 +48,7 @@ class Board extends React.Component {
 
 function MoveButton(props) {
   return (
-    <li key={props.move}>
+    <li>
       <button onClick={() => props.onClick(props.move)}>{props.desc}</button>
     </li>
   );
